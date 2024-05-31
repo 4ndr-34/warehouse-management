@@ -13,18 +13,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
     private UUID orderNumber;
     private LocalDate submittedDate;
-    //TODO - status enum connection
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    //TODO - item connection
+    //TODO - items that are in this order
+    /*@ManyToMany()
+    @JoinTable(
+            name = "order_items",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
+    private List<Inventory> orderItems;*/
     private Integer quantity;
     private LocalDate deadline;
     //TODO - user connection
+    //TODO - delivery connection
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 }

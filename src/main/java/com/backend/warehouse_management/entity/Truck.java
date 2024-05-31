@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Trucks {
+public class Truck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "truck_id")
     private Long id;
     @Column(unique = true, length = 15)
     private String chassisNumber;
