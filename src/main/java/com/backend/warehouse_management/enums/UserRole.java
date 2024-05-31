@@ -1,2 +1,7 @@
-package com.backend.warehouse_management.enums;public class UserRole {
+package com.backend.warehouse_management.enums;
+
+public enum UserRole {
+    CLIENT,
+    WAREHOUSE_MANAGER,
+    SYSTEM_ADMIN
 }
