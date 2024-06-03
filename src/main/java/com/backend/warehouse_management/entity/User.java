@@ -19,7 +19,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
     @Column(nullable = false)
     private String firstName;
@@ -33,7 +32,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     //TODO - connection with order
-    @ManyToMany
+
+    @OneToMany
     private List<Order>orders;
 
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -18,25 +19,27 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
     private Long id;
     private UUID orderNumber;
     private LocalDate submittedDate;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
     //TODO - items that are in this order
-    /*@ManyToMany()
-    @JoinTable(
-            name = "order_items",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Inventory> orderItems;*/
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    private List<OrderItems> orderItems;
+
     private Integer quantity;
     private LocalDate deadline;
-    //TODO - user connection
+
     //TODO - delivery connection
     @ManyToOne
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    //TODO - user connection
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

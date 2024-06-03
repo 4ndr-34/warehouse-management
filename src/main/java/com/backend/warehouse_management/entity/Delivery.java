@@ -16,7 +16,6 @@ public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delivery_id")
     private Long id;
     //TODO - connection with orders
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
