@@ -28,7 +28,7 @@ public class ClientController {
 
     @GetMapping("/{id}/allorders")
     public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable("id") Long userId) {
-        return new ResponseEntity<>(orderService.getAllOrders(userId), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getAllOrdersForClientId(userId), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/orders")
