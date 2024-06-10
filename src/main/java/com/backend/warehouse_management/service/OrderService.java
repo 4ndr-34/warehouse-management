@@ -12,7 +12,7 @@ public interface OrderService {
 
     OrderDTO addItemToOrder(Long userId, OrderItemDTO orderItemDTO);
 
-    List<OrderDTO> getAllOrders(Long userId);
+    List<OrderDTO> getAllOrdersForClientId(Long userId);
 
     List<OrderDTO> getOrdersByStatus(Long userId, OrderStatus orderStatus);
 }
