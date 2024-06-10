@@ -1,4 +1,4 @@
-package com.backend.warehouse_management.controller;
+package com.backend.warehouse_management.controller.admin;
 
 import com.backend.warehouse_management.dto.admin.UserCRUDRequest;
 import com.backend.warehouse_management.dto.admin.UserCRUDResponse;

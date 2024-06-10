@@ -2,7 +2,6 @@ package com.backend.warehouse_management.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
 @Table
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Delivery {
 
     @Id
@@ -22,4 +20,14 @@ public class Delivery {
     private List<Order> orders;
     //TODO - connection with trucks
 
+    public Long getId() {
+        return id;
+    }
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }
