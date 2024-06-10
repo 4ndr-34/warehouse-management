@@ -38,7 +38,9 @@ public class CustomOrderMapper {
         orderDTO.setUserId(order.getUser().getId());
         orderDTO.setOrderNumber(order.getOrderNumber());
         orderDTO.setOrderStatus(order.getOrderStatus());
-        orderDTO.setDeliveryId(order.getDelivery().getId());
+        if(order.getDelivery() != null) {
+            orderDTO.setDeliveryId(order.getDelivery().getId());
+        }
         if(order.getOrderItems() != null){
             orderDTO.setOrderItems(order.getOrderItems()
                     .stream()
