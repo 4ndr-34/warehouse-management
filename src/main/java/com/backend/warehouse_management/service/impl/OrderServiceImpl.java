@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getAllOrders(Long userId) {
+    public List<OrderDTO> getAllOrdersForClientId(Long userId) {
         List<Order> ordersForUser = orderRepository.findAllByUserId(userId);
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersForUser) {
