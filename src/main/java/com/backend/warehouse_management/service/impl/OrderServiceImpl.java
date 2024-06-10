@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByStatus(Long userId, OrderStatus orderStatus) {
+    public List<OrderDTO> getOrdersByStatusAndClientId(Long userId, OrderStatus orderStatus) {
         List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(userId, orderStatus);
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersOfStatus) {

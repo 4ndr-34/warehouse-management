@@ -33,7 +33,7 @@ public class ClientController {
 
     @GetMapping("/{userId}/orders")
     public ResponseEntity<List<OrderDTO>> getAllOrdersByStatus(@PathVariable("userId") Long userId, @RequestParam("status") OrderStatus orderStatus) {
-        return new ResponseEntity<>(orderService.getOrdersByStatus(userId, orderStatus), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(userId, orderStatus), HttpStatus.OK);
     }
 
     @PostMapping("/order/{id}/addItem")

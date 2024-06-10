@@ -14,5 +14,5 @@ public interface OrderService {
 
     List<OrderDTO> getAllOrdersForClientId(Long userId);
 
-    List<OrderDTO> getOrdersByStatus(Long userId, OrderStatus orderStatus);
+    List<OrderDTO> getOrdersByStatusAndClientId(Long userId, OrderStatus orderStatus);
 }
