@@ -1,25 +1,14 @@
 package com.backend.warehouse_management.admin;
 
-import com.backend.warehouse_management.controller.AdminController;
-import com.backend.warehouse_management.dto.admin.UserCRUDRequest;
-import com.backend.warehouse_management.dto.admin.UserCRUDResponse;
-import com.backend.warehouse_management.enums.UserRole;
+import com.backend.warehouse_management.controller.admin.AdminController;
 import com.backend.warehouse_management.repository.UserRepository;
 import com.backend.warehouse_management.service.UserService;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.awaitility.Awaitility.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AdminController.class)

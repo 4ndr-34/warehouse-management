@@ -14,12 +14,6 @@ public class CustomOrderMapper {
         orderDTO.setOrderNumber(order.getOrderNumber());
         orderDTO.setOrderStatus(order.getOrderStatus());
         orderDTO.setUserId(order.getUser().getId());
-        if(order.getDelivery() != null){
-            orderDTO.setDeliveryId(order.getDelivery().getId());
-        }
-
-        orderDTO.setDeadline(order.getDeadline());
-
         if(order.getOrderItems() != null){
             orderDTO.setOrderItems(order.getOrderItems()
                     .stream()
@@ -27,6 +21,35 @@ public class CustomOrderMapper {
                     .collect(Collectors.toList()));
         }
         orderDTO.setTotalPrice(order.getTotalPrice());
+        return orderDTO;
+    }
+
+    public static OrderDTO managerMapOrderToOrderDTOGeneralDetails(Order order) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderNumber(order.getOrderNumber());
+        orderDTO.setSubmittedDate(order.getSubmittedDate());
+        orderDTO.setOrderStatus(order.getOrderStatus());
+        orderDTO.setUserId(order.getUser().getId());
+        return orderDTO;
+    }
+
+    public static OrderDTO managerMapOrderToOrderDTODetailed(Order order) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setUserId(order.getUser().getId());
+        orderDTO.setOrderNumber(order.getOrderNumber());
+        orderDTO.setOrderStatus(order.getOrderStatus());
+        if(order.getDelivery() != null) {
+            orderDTO.setDeliveryId(order.getDelivery().getId());
+        }
+        if(order.getOrderItems() != null){
+            orderDTO.setOrderItems(order.getOrderItems()
+                    .stream()
+                    .map(CustomOrderItemMapper::getBasicDetailsFromOrderItem)
+                    .collect(Collectors.toList()));
+        }
+        orderDTO.setSubmittedDate(order.getSubmittedDate());
+        orderDTO.setTotalPrice(order.getTotalPrice());
+        orderDTO.setDeadline(order.getDeadline());
         return orderDTO;
     }
 

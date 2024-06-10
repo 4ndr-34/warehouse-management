@@ -1,7 +1,7 @@
-package com.backend.warehouse_management.dto.client;
+package com.backend.warehouse_management.dto.manager;
 
+import com.backend.warehouse_management.dto.client.OrderItemDTO;
 import com.backend.warehouse_management.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -17,17 +17,14 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrderDTO {
+public class ManagerOrderDTO {
 
+    private Long id;
     private UUID orderNumber;
     private LocalDate submittedDate;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    private Long userId;
-    private List<OrderItemBasicDetailsDTO> orderItems;
-    private Double totalPrice;
-    private LocalDate deadline;
-    private Long deliveryId;
+    private Double TotalPrice;
+    private List<OrderItemDTO> orderItems;
 
 }

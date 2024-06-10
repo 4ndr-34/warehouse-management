@@ -26,17 +26,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     private Double totalPrice;
-    //TODO - items that are in this order
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
     private LocalDate deadline;
-
-    //TODO - delivery connection
     @ManyToOne
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
-
-    //TODO - user connection
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
