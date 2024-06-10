@@ -8,4 +8,6 @@ public interface ManagerService {
 
     List<OrderDTO> managerGetAllOrders();
 
+    OrderDTO managerGetDetailedOrder(Long orderId) throws Exception;
+
 }
