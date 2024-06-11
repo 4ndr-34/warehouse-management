@@ -1,9 +1,7 @@
 package com.backend.warehouse_management.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +10,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "order_item")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class OrderItem {
 
     @Id
@@ -30,47 +30,4 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 }
