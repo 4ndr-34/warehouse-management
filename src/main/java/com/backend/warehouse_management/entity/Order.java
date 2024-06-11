@@ -34,5 +34,5 @@ public class Order {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
+    private String decliningReason;
 }
