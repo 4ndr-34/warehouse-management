@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class CustomOrderMapper {
 
 
-    public static OrderDTO clientMapOrderToOrderDTO(Order order) {
+    public static OrderDTO basicMapOrderToOrderDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setOrderNumber(order.getOrderNumber());
@@ -21,6 +21,9 @@ public class CustomOrderMapper {
                     .collect(Collectors.toList()));
         }
         orderDTO.setTotalPrice(order.getTotalPrice());
+        if(order.getDecliningReason() != null) {
+            orderDTO.setDecliningReason(order.getDecliningReason());
+        }
         return orderDTO;
     }
 
@@ -50,6 +53,9 @@ public class CustomOrderMapper {
         orderDTO.setSubmittedDate(order.getSubmittedDate());
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setDeadline(order.getDeadline());
+        if(order.getDecliningReason() != null) {
+            orderDTO.setDecliningReason(order.getDecliningReason());
+        }
         return orderDTO;
     }
 
