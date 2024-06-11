@@ -20,8 +20,6 @@ public class Truck {
     private String chassisNumber;
     @Column(unique = true, length = 7)
     private String licensePlate;
-
-    public Long getId() {
-        return id;
-    }
+    private double capacity;
+    //TODO - connection with delivery
 }
