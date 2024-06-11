@@ -10,4 +10,8 @@ public interface ManagerService {
 
     OrderDTO managerGetDetailedOrder(Long orderId) throws Exception;
 
+    OrderDTO managerApproveOrder(Long orderId) throws Exception;
+
+    OrderDTO managerDeclineOrder(Long orderId, String declineReason) throws Exception;
+
 }

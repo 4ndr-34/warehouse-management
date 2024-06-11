@@ -33,6 +33,15 @@ public class ManagerController {
         return new ResponseEntity<>(managerService.managerGetDetailedOrder(orderId), HttpStatus.OK);
     }
 
+    @PostMapping("/order/{orderId}/approve")
+    public ResponseEntity<OrderDTO> approveOrder(@PathVariable("orderId") Long orderId) throws Exception {
+        return new ResponseEntity<>(managerService.managerApproveOrder(orderId), HttpStatus.OK);
+    }
+
+    @PostMapping("/order/{orderId}/decline")
+    public ResponseEntity<OrderDTO> declineOrder(@PathVariable("orderId") Long orderId, @RequestBody String reason) throws Exception {
+        return new ResponseEntity<>(managerService.managerDeclineOrder(orderId, reason), HttpStatus.OK);
+    }
 
     //PRODUCT CRUD ENDPOINTS
     @PostMapping("/product/create")
