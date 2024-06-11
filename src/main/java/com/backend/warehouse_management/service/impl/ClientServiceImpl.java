@@ -47,7 +47,7 @@ public class ClientServiceImpl implements ClientService {
             order.setSubmittedDate(LocalDate.now());
             order.setUser(userRepository.findById(userId).get());
             order.setOrderStatus(OrderStatus.CREATED);
-            return CustomOrderMapper.clientMapOrderToOrderDTO(orderRepository.save(order));
+            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(order));
         }
     }
 
@@ -93,7 +93,7 @@ public class ClientServiceImpl implements ClientService {
                 order.getOrderItems().add(updatedOrderItem);
 
                 //save order and return it
-                return CustomOrderMapper.clientMapOrderToOrderDTO(orderRepository.save(order));
+                return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(order));
             }
 
             //otherwise throw an exception that these two are not found
@@ -132,7 +132,7 @@ public class ClientServiceImpl implements ClientService {
                     //save the updated order item
                     orderItemRepository.save(optionalOrderItem.get());
                 //save the order with the new price
-                return CustomOrderMapper.clientMapOrderToOrderDTO(
+                return CustomOrderMapper.basicMapOrderToOrderDTO(
                         orderRepository.save(optionalOrder.get()));
 
             }
@@ -165,7 +165,7 @@ public class ClientServiceImpl implements ClientService {
                 //delete the item
                 orderItemRepository.deleteById(orderItemId);
 
-                return CustomOrderMapper.clientMapOrderToOrderDTO(optionalOrder.get());
+                return CustomOrderMapper.basicMapOrderToOrderDTO(optionalOrder.get());
             }
             //if order doesn't exist or is non-editable, throw exception
             else {
@@ -188,7 +188,7 @@ public class ClientServiceImpl implements ClientService {
                 optionalOrder.get().getOrderStatus().equals(OrderStatus.DECLINED))) {
             optionalOrder.get().setOrderStatus(OrderStatus.AWAITING_APPROVAL);
             //save order and return it with the new status
-            return CustomOrderMapper.clientMapOrderToOrderDTO(
+            return CustomOrderMapper.basicMapOrderToOrderDTO(
                     orderRepository.save(optionalOrder.get()));
         }
         //if order doesn't exist or is non-editable, throw exception
@@ -209,7 +209,7 @@ public class ClientServiceImpl implements ClientService {
         {
             optionalOrder.get().setOrderStatus(OrderStatus.CANCELLED);
             //save order and return it with the new status
-            return CustomOrderMapper.clientMapOrderToOrderDTO(
+            return CustomOrderMapper.basicMapOrderToOrderDTO(
                     orderRepository.save(optionalOrder.get()));
         }
         //if order doesn't exist or is non-editable, throw exception
