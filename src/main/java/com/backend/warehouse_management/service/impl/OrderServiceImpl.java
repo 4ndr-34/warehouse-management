@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersForUser = orderRepository.findAllByUserId(userId);
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersForUser) {
-            orderListForReturn.add(CustomOrderMapper.clientMapOrderToOrderDTO(order));
+            orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));
         }
         return orderListForReturn;
     }
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(userId, orderStatus);
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersOfStatus) {
-            orderListForReturn.add(CustomOrderMapper.clientMapOrderToOrderDTO(order));
+            orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));
         }
         return orderListForReturn;
     }
