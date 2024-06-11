@@ -2,9 +2,11 @@ package com.backend.warehouse_management.controller.manager;
 
 import com.backend.warehouse_management.dto.client.OrderDTO;
 import com.backend.warehouse_management.dto.manager.ProductDTO;
+import com.backend.warehouse_management.dto.manager.TruckDTO;
 import com.backend.warehouse_management.service.ManagerService;
 import com.backend.warehouse_management.service.OrderService;
 import com.backend.warehouse_management.service.ProductService;
+import com.backend.warehouse_management.service.TruckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class ManagerController {
     private final OrderService orderService;
     private final ManagerService managerService;
     private final ProductService productService;
+    private final TruckService truckService;
     @GetMapping("/order/all")
     public ResponseEntity<List<OrderDTO>> getAllOrdersGeneralDetail() {
         return new ResponseEntity<>(managerService.managerGetAllOrders(), HttpStatus.OK);
@@ -30,6 +33,8 @@ public class ManagerController {
         return new ResponseEntity<>(managerService.managerGetDetailedOrder(orderId), HttpStatus.OK);
     }
 
+
+    //PRODUCT CRUD ENDPOINTS
     @PostMapping("/product/create")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws Exception {
         return new ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
@@ -56,4 +61,26 @@ public class ManagerController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+
+    //TRUCK CRUD ENDPOINTS
+    @PostMapping("/truck/add")
+    public ResponseEntity<TruckDTO> addNewTruck(@RequestBody TruckDTO truckDTO) throws Exception {
+        return new ResponseEntity<>(truckService.addTruck(truckDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/truck/get")
+    public ResponseEntity<TruckDTO> getTruckByLicensePlate(@RequestParam String licensePlate) throws Exception {
+        return new ResponseEntity<>(truckService.getTruckByLicensePlate(licensePlate), HttpStatus.OK);
+    }
+
+    @PutMapping("/truck/update/{truckId}")
+    public ResponseEntity<TruckDTO> updateTruckDetails(@PathVariable("truckId") Long truckId, @RequestBody TruckDTO truckDTO) throws Exception {
+        return new ResponseEntity<>(truckService.editTruckDetails(truckId, truckDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/truck/remove")
+    public ResponseEntity removeTruck(@RequestParam String licensePlate) throws Exception {
+        truckService.removeTruckByLicensePlate(licensePlate);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
