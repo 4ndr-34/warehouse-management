@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +22,12 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<OrderDTO> managerGetAllOrders() {
-        //retrieve orders in descending order to re-order them in the list
+        //retrieve orders in descending order to re-order them in the return list
         List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "submittedDate"));
-        List<OrderDTO> orderToReturn = new ArrayList<>();
-        //insert items in the dto list
-        for(Order order : orders) {
-            //map order to the general details
-            orderToReturn.add(CustomOrderMapper
-                    .managerMapOrderToOrderDTOGeneralDetails(order));
-        }
-        //return the list
-        return orderToReturn;
+        //map the orders to a new list and return them
+        return orders.stream()
+                .map(CustomOrderMapper::managerMapOrderToOrderDTOGeneralDetails)
+                .collect(Collectors.toList());
     }
 
     @Override
