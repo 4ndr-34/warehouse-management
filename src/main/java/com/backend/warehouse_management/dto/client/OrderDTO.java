@@ -29,5 +29,5 @@ public class OrderDTO {
     private Double totalPrice;
     private LocalDate deadline;
     private Long deliveryId;
-
+    private String decliningReason;
 }
