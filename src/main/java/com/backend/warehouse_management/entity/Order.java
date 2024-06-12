@@ -21,7 +21,6 @@ public class Order {
     private Long id;
     private UUID orderNumber;
     private LocalDate submittedDate;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     private Double totalPrice;
@@ -29,7 +28,7 @@ public class Order {
     private List<OrderItem> orderItems;
     private LocalDate deadline;
     @ManyToOne
-    @JoinColumn(name = "delivery_id")
+    @JoinColumn(name = "delivery_id", referencedColumnName = "id")
     private Delivery delivery;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
