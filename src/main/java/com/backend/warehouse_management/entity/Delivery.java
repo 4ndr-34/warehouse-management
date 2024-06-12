@@ -1,5 +1,6 @@
 package com.backend.warehouse_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate scheduledDate;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
     private List<Order> orders;
