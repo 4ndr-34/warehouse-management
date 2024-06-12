@@ -36,7 +36,7 @@ public class ClientController {
         return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(userId, orderStatus), HttpStatus.OK);
     }
 
-    @PostMapping("/order/{id}/addItem")
+    @PostMapping("{id}/order/addItem")
     public ResponseEntity<OrderDTO> addItemToOrder(@PathVariable("id") Long userId, @RequestBody AddItemToOrderRequest itemRequest) throws Exception {
         return new ResponseEntity<>(clientService.addItemToOrder(userId, itemRequest), HttpStatus.OK);
     }
