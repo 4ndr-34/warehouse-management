@@ -18,7 +18,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminConfigMapper adminConfigMapper;
 
     @Override
-    public ConfigDTO adminAddConfig(ConfigDTO configDTO) throws Exception {
+    public ConfigDTO adminAddConfig(ConfigDTO configDTO) throws RuntimeException {
         //if config does not exist, then create it
         if(!configRepository.existsByConfigName(configDTO.getConfigName())) {
             AdminConfig adminConfig = new AdminConfig();
@@ -29,12 +29,12 @@ public class AdminServiceImpl implements AdminService {
         }
         //if config exists, throw exception
         else {
-            throw new Exception("The config with this name: " + configDTO.getConfigName() + " already exists.");
+            throw new RuntimeException("The config with this name: " + configDTO.getConfigName() + " already exists.");
         }
     }
 
     @Override
-    public ConfigDTO adminChangeConfigValue(Long configId, Integer newValue) throws Exception {
+    public ConfigDTO adminChangeConfigValue(Long configId, Integer newValue) throws RuntimeException {
         //retrieve config
         Optional<AdminConfig> optionalConfig = configRepository.findById(configId);
         //if config exists
@@ -47,9 +47,7 @@ public class AdminServiceImpl implements AdminService {
         }
         //if config doesn't exist, throw exception
         else {
-            throw new Exception("Config with this ID: " + configId + " doesn't exist");
+            throw new RuntimeException("Config with this ID: " + configId + " doesn't exist");
         }
     }
-
-
 }
