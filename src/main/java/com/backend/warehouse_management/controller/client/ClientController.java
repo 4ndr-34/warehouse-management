@@ -3,6 +3,8 @@ package com.backend.warehouse_management.controller.client;
 
 import com.backend.warehouse_management.dto.client.AddItemToOrderRequest;
 import com.backend.warehouse_management.dto.client.OrderDTO;
+import com.backend.warehouse_management.dto.client.RemoveOrderItemRequest;
+import com.backend.warehouse_management.dto.client.UpdateOrderItemRequest;
 import com.backend.warehouse_management.enums.OrderStatus;
 import com.backend.warehouse_management.service.ClientService;
 import com.backend.warehouse_management.service.OrderService;
@@ -26,11 +28,13 @@ public class ClientController {
         return new ResponseEntity<>(clientService.createOrder(userId), HttpStatus.CREATED);
     }
 
+
+    //client/2/allorders
     @GetMapping("/{id}/allorders")
     public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable("id") Long userId) {
         return new ResponseEntity<>(orderService.getAllOrdersForClientId(userId), HttpStatus.OK);
     }
-
+    //client/2/orders
     @GetMapping("/{userId}/orders")
     public ResponseEntity<List<OrderDTO>> getAllOrdersByStatus(@PathVariable("userId") Long userId, @RequestParam("status") OrderStatus orderStatus) {
         return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(userId, orderStatus), HttpStatus.OK);
@@ -41,24 +45,29 @@ public class ClientController {
         return new ResponseEntity<>(clientService.addItemToOrder(userId, itemRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/order/{orderId}/item/{itemId}/update")
-    public ResponseEntity<OrderDTO> updateItemQuantity(@PathVariable("orderId") Long orderId,@PathVariable("itemId") Long itemId, @RequestParam Integer quantity) throws Exception {
-        return new ResponseEntity<>(clientService.updateItemQuantity(orderId, itemId, quantity), HttpStatus.OK);
+
+    @PostMapping("/updateitem")
+    public ResponseEntity<OrderDTO> updateItemQuantity(@RequestBody UpdateOrderItemRequest request) throws Exception {
+        return new ResponseEntity<>(clientService.updateItemQuantity(request), HttpStatus.OK);
     }
 
-    @DeleteMapping("/order/{orderId}/item/delete/{itemId}")
-    public ResponseEntity<OrderDTO> removeItemFromOrder(@PathVariable("orderId") Long orderId, @PathVariable("itemId") Long itemId) throws Exception {
-        return new ResponseEntity<>(clientService.removeItemFromOrder(itemId, orderId), HttpStatus.OK);
+    //client/order/3/item/delete/4
+    @DeleteMapping("/removeitem")
+    public ResponseEntity<OrderDTO> removeItemFromOrder(@RequestBody RemoveOrderItemRequest request) throws Exception {
+        return new ResponseEntity<>(clientService.removeItemFromOrder(request), HttpStatus.OK);
     }
 
-    @PostMapping("/{userId}/order/{orderId}/submit")
-    public ResponseEntity<OrderDTO> submitOrder(@PathVariable("userId") Long userId, @PathVariable("orderId") Long orderId) throws Exception {
-        return new ResponseEntity<>(clientService.submitOrder(userId, orderId), HttpStatus.OK);
+    @PostMapping("/submit")
+    public ResponseEntity<OrderDTO> submitOrder(@RequestParam Long orderId) {
+        return new ResponseEntity<>(clientService.submitOrder(orderId), HttpStatus.OK);
     }
 
-    @PostMapping("/{userId}/order/{orderId}/cancel")
-    public ResponseEntity<OrderDTO> cancelOrder(@PathVariable("userId") Long userId, @PathVariable("orderId") Long orderId) throws Exception {
-        return new ResponseEntity<>(clientService.cancelOrder(userId, orderId), HttpStatus.OK);
+    @PostMapping("/cancel")
+    public ResponseEntity<OrderDTO> cancelOrder(@RequestParam Long orderId) {
+        return new ResponseEntity<>(clientService.cancelOrder(orderId), HttpStatus.OK);
     }
+
+/*    @PutMapping("order/{oderId}")
+    updateOrder(@RequestBody OrderDTO order)*/
 
 }

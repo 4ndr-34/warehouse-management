@@ -55,6 +55,9 @@ public class ManagerController {
         return new ResponseEntity<>(managerService.managerAddOrderToDelivery(orderId, deliveryId), HttpStatus.OK);
     }
 
+    /*@GetMapping("/delivery/available")
+    public ResponseEntity<List<DeliveryDTO>>*/
+
     //PRODUCT CRUD ENDPOINTS
     @PostMapping("/product/create")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws Exception {
