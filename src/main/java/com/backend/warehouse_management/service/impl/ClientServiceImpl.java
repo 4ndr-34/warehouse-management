@@ -18,53 +18,23 @@ import com.backend.warehouse_management.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
 
-    private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
-    private final UserRepository userRepository;
-    private final OrderMapper orderMapper;
-    private final OrderItemMapper orderItemMapper;
-
+    private final OrderUtils orderUtils;
 
     @Override
     public OrderDTO createOrder(Long userId) throws Exception {
-
-        if(orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.CREATED).isPresent()){
-            throw new Exception("You already have an open order");
-        }
-        else {
-            Order order = new Order();
-            order.setOrderNumber(UUID.randomUUID());
-            order.setTotalPrice(0.0);
-            order.setSubmittedDate(LocalDate.now());
-            order.setUser(userRepository.findById(userId).get());
-            order.setOrderStatus(OrderStatus.CREATED);
-            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(order));
-        }
+        return orderUtils.createOrder(userId);
     }
 
 
 
 
     @Override
-    public OrderDTO addItemToOrder(Long userId, AddItemToOrderRequest itemRequest) throws Exception {
-        Optional<Order> optionalOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.CREATED);
-
-        //if order exists, then add item to order
-        if (optionalOrder.isPresent()) {
-            return addItem(userId, itemRequest, optionalOrder.get());
-        }
-        else {
-            throw new Exception("This order does not exist, please create it first");
-        }
+    public OrderDTO addItemToOrder(Long userId, AddItemToOrderRequest itemRequest) {
+        return orderUtils.addItemToOrder(userId, itemRequest);
     }
 
     private OrderDTO addItem(Long userId, AddItemToOrderRequest itemRequest, Order order) throws Exception {
@@ -109,43 +79,8 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public OrderDTO updateItemQuantity(Long orderId, Long itemId, Integer newQuantity) throws Exception {
-        //find item
-        Optional<OrderItem> optionalOrderItem = orderItemRepository.findById(itemId);
-        //check if it exists
-        if(optionalOrderItem.isPresent()){
-            //then retrieve order
-            Optional<Order> optionalOrder = orderRepository.findById(orderId);
-            //if the order exists and its status is acceptable, we can edit
-            if (optionalOrder.isPresent() && (optionalOrder.get().getOrderStatus().equals(OrderStatus.CREATED)
-                    || optionalOrder.get().getOrderStatus().equals(OrderStatus.DECLINED))) {
-                    //retrieve initial price for item
-                    Double initialPrice = optionalOrderItem.get().getPrice();
-                    //set the item price difference
-                    double priceDifference = (newQuantity * optionalOrderItem.get().getProduct().getPrice()) - initialPrice;                             ;
-                    //update order total price for the order
-                    optionalOrder.get().setTotalPrice(
-                            optionalOrder.get().getTotalPrice() + priceDifference);
-                    //change quantity and price for order item
-                    optionalOrderItem.get().setQuantity(newQuantity);
-                    optionalOrderItem.get().setPrice(optionalOrderItem.get().getProduct().getPrice() * newQuantity);
-                    //save the updated order item
-                    orderItemRepository.save(optionalOrderItem.get());
-                //save the order with the new price
-                return CustomOrderMapper.basicMapOrderToOrderDTO(
-                        orderRepository.save(optionalOrder.get()));
-
-            }
-            //if order doesn't exist or is non-editable, throw exception
-            else {
-                throw new Exception("Order doesn't exist or you're not allowed to update it");
-            }
-        }
-        //if item does not exist, throw exception
-        else {
-            throw new Exception("The item does not exist");
-        }
-
+    public OrderDTO updateItemQuantity(UpdateOrderItemRequest request) {
+        return orderUtils.updateItemQuantity(request);
     }
 
 
@@ -198,24 +133,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public OrderDTO cancelOrder(Long userId, Long orderId) throws Exception {
-        //retrieve order
-        Optional<Order> optionalOrder = orderRepository.findByIdAndUserId(orderId, userId);
-        //if the order exists and its status is acceptable, we can edit
-        if (optionalOrder.isPresent() &&
-                !(optionalOrder.get().getOrderStatus().equals(OrderStatus.FULFILLED) ||
-                optionalOrder.get().getOrderStatus().equals(OrderStatus.UNDER_DELIVERY) ||
-                optionalOrder.get().getOrderStatus().equals(OrderStatus.CANCELLED)))
-        {
-            optionalOrder.get().setOrderStatus(OrderStatus.CANCELLED);
-            //save order and return it with the new status
-            return CustomOrderMapper.basicMapOrderToOrderDTO(
-                    orderRepository.save(optionalOrder.get()));
-        }
-        //if order doesn't exist or is non-editable, throw exception
-        else {
-            throw new Exception("Order doesn't exist or you're not allowed to update it");
-        }
+    public OrderDTO cancelOrder(Long orderId) {
+        return orderUtils.cancelOrder(orderId);
     }
 
 
