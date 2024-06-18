@@ -31,7 +31,7 @@ public class User {
     private UserRole role;
     //TODO - connection with order
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Order>orders;
 
     public Long getId() {

@@ -1,6 +1,8 @@
 package com.backend.warehouse_management.controller.manager;
 
 import com.backend.warehouse_management.dto.client.OrderDTO;
+import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.dto.manager.ProductDTO;
 import com.backend.warehouse_management.dto.manager.TruckDTO;
 import com.backend.warehouse_management.service.ManagerService;
@@ -42,6 +44,19 @@ public class ManagerController {
     public ResponseEntity<OrderDTO> declineOrder(@PathVariable("orderId") Long orderId, @RequestBody String reason) throws Exception {
         return new ResponseEntity<>(managerService.managerDeclineOrder(orderId, reason), HttpStatus.OK);
     }
+
+    @PostMapping("/truck/{truckId}/newdelivery")
+    public ResponseEntity<DeliveryDTO> addDeliveryToTruck(@RequestBody CreateDeliveryRequest deliveryRequest, @PathVariable("truckId") Long truckId) throws Exception {
+        return new ResponseEntity<>(managerService.managerCreateDeliveryWithTruck(deliveryRequest, truckId), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/delivery/{deliveryId}/add")
+    public ResponseEntity<DeliveryDTO> addOrderToDelivery(@PathVariable("deliveryId") Long deliveryId, @RequestParam("orderId") Long orderId) throws Exception {
+        return new ResponseEntity<>(managerService.managerAddOrderToDelivery(orderId, deliveryId), HttpStatus.OK);
+    }
+
+    /*@GetMapping("/delivery/available")
+    public ResponseEntity<List<DeliveryDTO>>*/
 
     //PRODUCT CRUD ENDPOINTS
     @PostMapping("/product/create")

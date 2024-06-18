@@ -1,11 +1,13 @@
 package com.backend.warehouse_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,19 +21,12 @@ public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //TODO - connection with orders
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate scheduledDate;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
     private List<Order> orders;
-    //TODO - connection with trucks
-
-    public Long getId() {
-        return id;
-    }
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
+    @ManyToOne
+    @JoinColumn(name = "truck_id", referencedColumnName = "id")
+    private Truck truck;
+    private Double remainingSpace;
 }

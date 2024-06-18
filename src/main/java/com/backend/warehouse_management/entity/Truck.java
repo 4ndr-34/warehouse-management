@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,6 @@ public class Truck {
     @Column(unique = true, length = 7)
     private String licensePlate;
     private double capacity;
-    //TODO - connection with delivery
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "truck", orphanRemoval = false)
+    private List<Delivery> deliveries;
 }

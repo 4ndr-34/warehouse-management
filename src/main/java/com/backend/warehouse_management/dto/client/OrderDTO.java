@@ -1,6 +1,7 @@
 package com.backend.warehouse_management.dto.client;
 
 import com.backend.warehouse_management.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class OrderDTO {
 
     private UUID orderNumber;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate submittedDate;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
