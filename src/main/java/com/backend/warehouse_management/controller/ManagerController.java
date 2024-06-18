@@ -1,4 +1,4 @@
-package com.backend.warehouse_management.controller.manager;
+package com.backend.warehouse_management.controller;
 
 import com.backend.warehouse_management.dto.client.OrderDTO;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;

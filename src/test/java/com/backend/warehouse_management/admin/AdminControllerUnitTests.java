@@ -1,6 +1,6 @@
 package com.backend.warehouse_management.admin;
 
-import com.backend.warehouse_management.controller.admin.AdminController;
+import com.backend.warehouse_management.controller.AdminController;
 import com.backend.warehouse_management.repository.UserRepository;
 import com.backend.warehouse_management.service.UserService;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package com.backend.warehouse_management.controller.client;
+package com.backend.warehouse_management.controller;
 
 
 import com.backend.warehouse_management.dto.client.AddItemToOrderRequest;
