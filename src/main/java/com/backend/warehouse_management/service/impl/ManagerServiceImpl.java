@@ -12,6 +12,7 @@ import com.backend.warehouse_management.mapper.CustomDeliveryMapper;
 import com.backend.warehouse_management.mapper.CustomOrderMapper;
 import com.backend.warehouse_management.repository.*;
 import com.backend.warehouse_management.service.ManagerService;
+import com.backend.warehouse_management.utils.DataUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -99,23 +100,26 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public List<LocalDate> managerCheckAvailableDeliveryDates() {
+    public List<DeliveryDTO> managerCheckAvailableDeliveryDates() {
         //get the upper limit of available delivery dates config
         LocalDate upperLimit = LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue());
         //find all available deliveries from today til the limit
         //List<Delivery> availableDeliveries = deliveryRepository.findDeliveriesByScheduledDateBetween(LocalDate.now(), upperLimit);
-        //TODO - rest of business logic here
-        return null;
+        List<Delivery> availableDeliveries = deliveryRepository.findAllByScheduledDateBetween(LocalDate.now(),
+                LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue()));
+        return availableDeliveries.stream()
+                .map(CustomDeliveryMapper::managerMapDeliveryToDeliveryDTO)
+                .collect(Collectors.toList());
     }
 
-    //TODO - to be tested
+
     @Override
     public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) throws Exception {
         //retrieve upper date limit
         LocalDate upperLimit = LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue());
         //check if you can add a delivery on this date (it is within the accepted range limit)
         //also check if it is a weekday
-        if (isWithinDateRange(deliveryRequest.getScheduledDate(), LocalDate.now(), upperLimit) && !isWeekend(deliveryRequest.getScheduledDate())) {
+        if (DataUtils.isWithinDateRange(deliveryRequest.getScheduledDate(), LocalDate.now(), upperLimit) && !isWeekend(deliveryRequest.getScheduledDate())) {
             //if a delivery for this truck on this date doesn't exist, create one
             if (!deliveryRepository.existsByScheduledDateAndTruckId(deliveryRequest.getScheduledDate(), truckId)) {
                 //create new delivery and assign values
@@ -156,8 +160,7 @@ public class ManagerServiceImpl implements ManagerService {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         //retrieve delivery
         Optional<Delivery> optionalDelivery = deliveryRepository.findById(deliveryId);
-        //check if they both exist
-        log.info("checking if order and delivery exist...");
+        log.info("checking if order {?1} and delivery {1} exist...", orderId, deliveryId);
         if (optionalOrder.isPresent() && optionalDelivery.isPresent()) {
             //check if this order is approved and that it's not added somewhere else
             log.info("checking if order status is appropriate...");
@@ -229,7 +232,9 @@ public class ManagerServiceImpl implements ManagerService {
 
 
     @Override
-    public DeliveryDTO managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
+    public List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
+
+
         return null;
     }
 
