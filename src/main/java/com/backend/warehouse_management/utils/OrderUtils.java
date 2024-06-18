@@ -20,12 +20,11 @@ import com.backend.warehouse_management.repository.ProductRepository;
 import com.backend.warehouse_management.repository.UserRepository;
 import com.backend.warehouse_management.state.AwaitingApprovalState;
 import com.backend.warehouse_management.state.CancelState;
+import com.backend.warehouse_management.state.CreateState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ public class OrderUtils {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final CreateState createState;
     private final AwaitingApprovalState awaitingApprovalState;
     private final CancelState cancelState;
 
@@ -44,13 +44,7 @@ public class OrderUtils {
             throw new OrderCannotBeProcessedException();
         } else {
             Order order = new Order();
-            order.setOrderStatus(OrderStatus.CREATED);
-            order.setOrderNumber(UUID.randomUUID());
-            order.setTotalPrice(0.0);
-            order.setSubmittedDate(LocalDate.now());
-            order.setUser(userRepository.findById(userId).get());
-            order.setOrderStatus(OrderStatus.CREATED);
-            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(order));
+            return createState.createOrder(userId, order);
         }
     }
 
