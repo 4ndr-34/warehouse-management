@@ -1,6 +1,6 @@
 package com.backend.warehouse_management.controller;
 
-import com.backend.warehouse_management.exception.ItemAlreadyExistsException;
+import com.backend.warehouse_management.exception.AlreadyExistsException;
 import com.backend.warehouse_management.exception.NotFoundException;
 import com.backend.warehouse_management.exception.OrderCannotBeProcessedException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Requested object is not found");
     }
 
-    @ExceptionHandler(ItemAlreadyExistsException.class)
+    @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<?> handleItemAlreadyExistsException() {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("This item already exists");
     }
