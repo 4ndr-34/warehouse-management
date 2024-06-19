@@ -4,7 +4,6 @@ import com.backend.warehouse_management.dto.client.*;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.entity.Order;
-import com.backend.warehouse_management.enums.OrderStatus;
 import com.backend.warehouse_management.mapper.CustomOrderMapper;
 import com.backend.warehouse_management.repository.OrderRepository;
 import com.backend.warehouse_management.service.OrderService;
@@ -24,14 +23,14 @@ public class OrderServiceImpl implements OrderService {
     private final OrderUtils orderUtils;
 
     @Override
-    public OrderDTO clientCreateOrder(Long userId) throws Exception {
+    public OrderDTO clientCreateOrder(Long userId) {
         return orderUtils.clientCreateOrder(userId);
     }
 
 
     @Override
-    public OrderDTO clientAddItemToOrder(Long userId, AddItemToOrderRequest itemRequest) {
-        return orderUtils.clientAddItemToOrder(userId, itemRequest);
+    public OrderDTO clientAddItemToOrder(AddItemToOrderRequest itemRequest) {
+        return orderUtils.clientAddItemToOrder(itemRequest);
     }
 
 
@@ -107,8 +106,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByStatusAndClientId(Long userId, OrderStatus orderStatus) {
-        List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(userId, orderStatus);
+    public List<OrderDTO> getOrdersByStatusAndClientId(GetOrdersByStatusRequest request) {
+        List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(request.getUserId(), request.getStatus());
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersOfStatus) {
             orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));

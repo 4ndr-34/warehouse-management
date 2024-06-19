@@ -1,11 +1,7 @@
 package com.backend.warehouse_management.controller;
 
 
-import com.backend.warehouse_management.dto.client.AddItemToOrderRequest;
-import com.backend.warehouse_management.dto.client.OrderDTO;
-import com.backend.warehouse_management.dto.client.RemoveOrderItemRequest;
-import com.backend.warehouse_management.dto.client.UpdateOrderItemRequest;
-import com.backend.warehouse_management.enums.OrderStatus;
+import com.backend.warehouse_management.dto.client.*;
 import com.backend.warehouse_management.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,33 +17,33 @@ public class ClientController {
 
     private final OrderService orderService;
 
-    @PostMapping("/order/create/{id}")
-    public ResponseEntity<OrderDTO> createOrder(@PathVariable("id") Long userId) throws Exception {
+    @PostMapping("/neworder")
+    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId) throws Exception {
         return new ResponseEntity<>(orderService.clientCreateOrder(userId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}/allorders")
-    public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable("id") Long userId) {
+    @GetMapping("/allorders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders(@RequestParam Long userId) {
         return new ResponseEntity<>(orderService.getAllOrdersForClientId(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<OrderDTO>> getAllOrdersByStatus(@PathVariable("userId") Long userId, @RequestParam("status") OrderStatus orderStatus) {
-        return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(userId, orderStatus), HttpStatus.OK);
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrdersByStatus(@RequestBody GetOrdersByStatusRequest request) {
+        return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(request), HttpStatus.OK);
     }
 
-    @PostMapping("{id}/order/addItem")
-    public ResponseEntity<OrderDTO> addItemToOrder(@PathVariable("id") Long userId, @RequestBody AddItemToOrderRequest itemRequest) throws Exception {
-        return new ResponseEntity<>(orderService.clientAddItemToOrder(userId, itemRequest), HttpStatus.OK);
+    @PostMapping("/addItem")
+    public ResponseEntity<OrderDTO> addItemToOrder(@RequestBody AddItemToOrderRequest itemRequest) {
+        return new ResponseEntity<>(orderService.clientAddItemToOrder(itemRequest), HttpStatus.OK);
     }
 
     @PostMapping("/updateitem")
-    public ResponseEntity<OrderDTO> updateItemQuantity(@RequestBody UpdateOrderItemRequest request) throws Exception {
+    public ResponseEntity<OrderDTO> updateItemQuantity(@RequestBody UpdateOrderItemRequest request) {
         return new ResponseEntity<>(orderService.clientUpdateItemQuantity(request), HttpStatus.OK);
     }
 
     @DeleteMapping("/removeitem")
-    public ResponseEntity<OrderDTO> removeItemFromOrder(@RequestBody RemoveOrderItemRequest request) throws Exception {
+    public ResponseEntity<OrderDTO> removeItemFromOrder(@RequestBody RemoveOrderItemRequest request) {
         return new ResponseEntity<>(orderService.clientRemoveItemFromOrder(request), HttpStatus.OK);
     }
 

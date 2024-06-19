@@ -3,17 +3,15 @@ package com.backend.warehouse_management.service;
 import com.backend.warehouse_management.dto.client.*;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
-import com.backend.warehouse_management.enums.OrderStatus;
 
 import java.util.List;
 
 public interface OrderService {
 
     List<OrderDTO> getAllOrdersForClientId(Long userId);
-
-    List<OrderDTO> getOrdersByStatusAndClientId(Long userId, OrderStatus orderStatus);
+    List<OrderDTO> getOrdersByStatusAndClientId(GetOrdersByStatusRequest request);
     OrderDTO clientCreateOrder(Long userId) throws Exception;
-    OrderDTO clientAddItemToOrder(Long userId, AddItemToOrderRequest itemRequest);
+    OrderDTO clientAddItemToOrder(AddItemToOrderRequest itemRequest);
     OrderDTO clientUpdateItemQuantity(UpdateOrderItemRequest request);
     OrderDTO clientRemoveItemFromOrder(RemoveOrderItemRequest removeOrderItemRequest);
     OrderDTO clientSubmitOrder(Long orderId);

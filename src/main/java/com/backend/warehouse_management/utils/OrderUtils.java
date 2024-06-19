@@ -52,11 +52,11 @@ public class OrderUtils {
         }
     }
 
-    public OrderDTO clientAddItemToOrder(Long userId, AddItemToOrderRequest request) {
-        Optional<Order> optionalOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.CREATED);
+    public OrderDTO clientAddItemToOrder(AddItemToOrderRequest request) {
+        Optional<Order> optionalOrder = orderRepository.findByUserIdAndOrderStatus(request.getUserId(), OrderStatus.CREATED);
 
         if (optionalOrder.isPresent() && DataUtils.isOrderEditable(optionalOrder.get())) {
-            return addItem(userId, request, optionalOrder.get());
+            return addItem(request, optionalOrder.get());
         }
         else {
             throw new NotFoundException();
@@ -65,16 +65,16 @@ public class OrderUtils {
 
 
 
-    private OrderDTO addItem(Long userId, AddItemToOrderRequest itemRequest, Order order) {
-        Optional<Order> userOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.CREATED);
+    private OrderDTO addItem(AddItemToOrderRequest itemRequest, Order order) {
+        Optional<Order> userOrder = orderRepository.findByUserIdAndOrderStatus(itemRequest.getUserId(), OrderStatus.CREATED);
 
         Optional<OrderItem> optionalOrderItem = orderItemRepository.findByProductIdAndOrderId(
                 itemRequest.getProductId(), userOrder.get().getId());
 
 
-        if (!optionalOrderItem.isPresent()) {
+        if (optionalOrderItem.isEmpty()) {
             Optional<Product> optionalProduct = productRepository.findById(itemRequest.getProductId());
-            Optional<User> optionalUser = userRepository.findById(userId);
+            Optional<User> optionalUser = userRepository.findById(itemRequest.getUserId());
 
             if (optionalProduct.isPresent() && optionalUser.isPresent()) {
                 Product product = optionalProduct.get();
@@ -112,7 +112,7 @@ public class OrderUtils {
             if (optionalOrder.isPresent() && DataUtils.isOrderEditable(optionalOrder.get())) {
                 Double initialPrice = optionalOrderItem.get().getPrice();
 
-                double priceDifference = (request.getQuantity() * optionalOrderItem.get().getProduct().getPrice()) - initialPrice;                             ;
+                double priceDifference = (request.getQuantity() * optionalOrderItem.get().getProduct().getPrice()) - initialPrice;
 
                 optionalOrder.get().setTotalPrice(
                         optionalOrder.get().getTotalPrice() + priceDifference);
@@ -270,8 +270,8 @@ public class OrderUtils {
     public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         Optional<Delivery> optionalDelivery = deliveryRepository.findById(deliveryId);
-
-        log.info("checking if order {?1} and delivery {1} exist...", orderId, deliveryId);
+        //TODO
+        //log.info("checking if order {?1} and delivery {1} exist...", orderId, deliveryId);
         if (optionalOrder.isPresent() && optionalDelivery.isPresent()) {
             log.info("checking if order status is appropriate...");
             if ((optionalOrder.get().getOrderStatus() == OrderStatus.APPROVED) ||
