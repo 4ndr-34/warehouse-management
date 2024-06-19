@@ -2,6 +2,8 @@ package com.backend.warehouse_management.service.impl;
 
 import com.backend.warehouse_management.dto.manager.ProductDTO;
 import com.backend.warehouse_management.entity.Product;
+import com.backend.warehouse_management.exception.AlreadyExistsException;
+import com.backend.warehouse_management.exception.NotFoundException;
 import com.backend.warehouse_management.mapper.ProductMapper;
 import com.backend.warehouse_management.repository.ProductRepository;
 import com.backend.warehouse_management.service.ProductService;
@@ -20,13 +22,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Override
-    public ProductDTO createProduct(ProductDTO productDTO) throws Exception {
+    public ProductDTO createProduct(ProductDTO productDTO) {
         if(productRepository.findByItemName(productDTO.getItemName()).isEmpty()){
             log.info("saving new product...");
             productRepository.save(
                     productMapper.productDTOToProduct(productDTO));
         } else {
-            throw new Exception("A product with this name already exists");
+            throw new AlreadyExistsException();
         }
 
         return productMapper.productToProductDTO(
@@ -61,9 +63,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(Long id) throws Exception {
+    public ProductDTO getProductById(Long id) {
         if(!productRepository.findById(id).isPresent()){
-            throw new Exception("Product with this ID: " + id + " does not exist");
+            throw new NotFoundException();
         }
         else {
             return productMapper.productToProductDTO(
@@ -77,9 +79,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductById(Long id) throws Exception {
+    public void deleteProductById(Long id) {
         if(productRepository.findById(id).isPresent()){
-            throw new Exception("User with this ID: " + id + " does not exist");
+            throw new NotFoundException();
         }
         else {
             productRepository.deleteById(id);

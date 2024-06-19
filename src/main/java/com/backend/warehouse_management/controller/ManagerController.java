@@ -1,10 +1,7 @@
 package com.backend.warehouse_management.controller;
 
 import com.backend.warehouse_management.dto.client.OrderDTO;
-import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
-import com.backend.warehouse_management.dto.manager.DeliveryDTO;
-import com.backend.warehouse_management.dto.manager.ProductDTO;
-import com.backend.warehouse_management.dto.manager.TruckDTO;
+import com.backend.warehouse_management.dto.manager.*;
 import com.backend.warehouse_management.service.OrderService;
 import com.backend.warehouse_management.service.ProductService;
 import com.backend.warehouse_management.service.TruckService;
@@ -29,47 +26,47 @@ public class ManagerController {
         return new ResponseEntity<>(orderService.managerGetAllOrders(), HttpStatus.OK);
     }
 
-    @GetMapping("/order/{orderId}")
-    public ResponseEntity<OrderDTO> getDetailedOrder(@PathVariable("orderId")Long orderId) throws Exception {
+    @GetMapping("/order/getdetails")
+    public ResponseEntity<OrderDTO> getDetailedOrder(@RequestParam Long orderId) {
         return new ResponseEntity<>(orderService.managerGetDetailedOrder(orderId), HttpStatus.OK);
     }
 
-    @PostMapping("/order/{orderId}/approve")
-    public ResponseEntity<OrderDTO> approveOrder(@PathVariable("orderId") Long orderId) throws Exception {
+    @PostMapping("/order/approve")
+    public ResponseEntity<OrderDTO> approveOrder(@RequestParam Long orderId) {
         return new ResponseEntity<>(orderService.managerApproveOrder(orderId), HttpStatus.OK);
     }
 
-    @PostMapping("/order/{orderId}/decline")
-    public ResponseEntity<OrderDTO> declineOrder(@PathVariable("orderId") Long orderId, @RequestBody String reason) throws Exception {
-        return new ResponseEntity<>(orderService.managerDeclineOrder(orderId, reason), HttpStatus.OK);
+    @PostMapping("/order/decline")
+    public ResponseEntity<OrderDTO> declineOrder(@RequestBody DeclineOrderRequest request) {
+        return new ResponseEntity<>(orderService.managerDeclineOrder(request), HttpStatus.OK);
     }
 
-    @PostMapping("/truck/{truckId}/newdelivery")
-    public ResponseEntity<DeliveryDTO> addDeliveryToTruck(@RequestBody CreateDeliveryRequest deliveryRequest, @PathVariable("truckId") Long truckId) throws Exception {
-        return new ResponseEntity<>(orderService.managerCreateDeliveryWithTruck(deliveryRequest, truckId), HttpStatus.CREATED);
+    @PostMapping("/truck/newdelivery")
+    public ResponseEntity<DeliveryDTO> newDeliveryForTruck(@RequestBody CreateDeliveryRequest deliveryRequest) {
+        return new ResponseEntity<>(orderService.managerCreateDeliveryWithTruck(deliveryRequest), HttpStatus.CREATED);
     }
 
-    @PostMapping("/delivery/{deliveryId}/add")
-    public ResponseEntity<DeliveryDTO> addOrderToDelivery(@PathVariable("deliveryId") Long deliveryId, @RequestParam("orderId") Long orderId) throws Exception {
-        return new ResponseEntity<>(orderService.managerAddOrderToDelivery(orderId, deliveryId), HttpStatus.OK);
+    @PostMapping("/delivery/addorder")
+    public ResponseEntity<DeliveryDTO> addOrderToDelivery(@RequestBody AddOrderToDeliveryRequest request) {
+        return new ResponseEntity<>(orderService.managerAddOrderToDelivery(request), HttpStatus.OK);
     }
 
 
 
     //PRODUCT CRUD ENDPOINTS
     @PostMapping("/product/create")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws Exception {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         return new ResponseEntity<>(productService.createProduct(productDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/product/update/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO) {
-        return new ResponseEntity<>(productService.updateProduct(productDTO, id), HttpStatus.OK);
+    @PutMapping("/product/update")
+    public ResponseEntity<ProductDTO> updateProduct(@RequestParam Long productId, @RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(productService.updateProduct(productDTO, productId), HttpStatus.OK);
     }
 
-    @GetMapping("/product/get/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Long id) throws Exception {
-        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
+    @GetMapping("/product/get")
+    public ResponseEntity<ProductDTO> getProductById(@RequestParam Long productId) {
+        return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
     }
 
     @GetMapping("/product/all")
@@ -77,10 +74,10 @@ public class ManagerController {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/product/delete/{id}")
-    public ResponseEntity deleteProductById(@PathVariable("id") Long id) throws Exception {
-        productService.deleteProductById(id);
-        return new ResponseEntity(HttpStatus.OK);
+    @DeleteMapping("/product/delete")
+    public ResponseEntity<?> deleteProductById(@RequestParam Long productId) {
+        productService.deleteProductById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body("deleted");
     }
 
 
@@ -95,8 +92,8 @@ public class ManagerController {
         return new ResponseEntity<>(truckService.getTruckByLicensePlate(licensePlate), HttpStatus.OK);
     }
 
-    @PutMapping("/truck/update/{truckId}")
-    public ResponseEntity<TruckDTO> updateTruckDetails(@PathVariable("truckId") Long truckId, @RequestBody TruckDTO truckDTO) throws Exception {
+    @PutMapping("/truck/update")
+    public ResponseEntity<TruckDTO> updateTruckDetails(@RequestParam Long truckId, @RequestBody TruckDTO truckDTO) throws Exception {
         return new ResponseEntity<>(truckService.editTruckDetails(truckId, truckDTO), HttpStatus.OK);
     }
 

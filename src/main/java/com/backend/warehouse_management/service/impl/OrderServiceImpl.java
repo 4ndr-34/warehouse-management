@@ -1,7 +1,9 @@
 package com.backend.warehouse_management.service.impl;
 
 import com.backend.warehouse_management.dto.client.*;
+import com.backend.warehouse_management.dto.manager.AddOrderToDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.entity.Order;
 import com.backend.warehouse_management.mapper.CustomOrderMapper;
@@ -71,8 +73,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) {
-        return orderUtils.managerDeclineOrder(orderId, declineReason);
+    public OrderDTO managerDeclineOrder(DeclineOrderRequest request) {
+        return orderUtils.managerDeclineOrder(request);
     }
 
     @Override
@@ -81,13 +83,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) {
-        return orderUtils.managerCreateDeliveryWithTruck(deliveryRequest, truckId);
+    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest) {
+        return orderUtils.managerCreateDeliveryWithTruck(deliveryRequest);
     }
 
     @Override
-    public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) {
-        return orderUtils.managerAddOrderToDelivery(orderId, deliveryId);
+    public DeliveryDTO managerAddOrderToDelivery(AddOrderToDeliveryRequest request) {
+        return orderUtils.managerAddOrderToDelivery(request.getOrderId(), request.getDeliveryId());
     }
 
     @Override

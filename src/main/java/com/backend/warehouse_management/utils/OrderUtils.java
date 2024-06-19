@@ -6,6 +6,7 @@ import com.backend.warehouse_management.dto.client.OrderDTO;
 import com.backend.warehouse_management.dto.client.RemoveOrderItemRequest;
 import com.backend.warehouse_management.dto.client.UpdateOrderItemRequest;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.entity.*;
 import com.backend.warehouse_management.enums.OrderStatus;
@@ -213,12 +214,12 @@ public class OrderUtils {
     }
 
 
-    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+    public OrderDTO managerDeclineOrder(DeclineOrderRequest request) {
+        Optional<Order> optionalOrder = orderRepository.findById(request.getOrderId());
 
         if (optionalOrder.isPresent() && (optionalOrder.get().getOrderStatus().equals(OrderStatus.AWAITING_APPROVAL))) {
             optionalOrder.get().setOrderStatus(OrderStatus.DECLINED);
-            optionalOrder.get().setDecliningReason(declineReason);
+            optionalOrder.get().setDecliningReason(request.getReason());
 
             return CustomOrderMapper.basicMapOrderToOrderDTO(
                     orderRepository.save(optionalOrder.get()));
@@ -239,18 +240,18 @@ public class OrderUtils {
     }
 
 
-    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) {
+    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest) {
         LocalDate upperLimit = LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue());
 
         if (DataUtils.isWithinDateRange(deliveryRequest.getScheduledDate(), LocalDate.now(), upperLimit)
                 && !DataUtils.isWeekend(deliveryRequest.getScheduledDate())) {
 
-            if (!deliveryRepository.existsByScheduledDateAndTruckId(deliveryRequest.getScheduledDate(), truckId)) {
+            if (!deliveryRepository.existsByScheduledDateAndTruckId(deliveryRequest.getScheduledDate(), deliveryRequest.getTruckId())) {
 
                 Delivery newDelivery = new Delivery();
                 newDelivery.setScheduledDate(deliveryRequest.getScheduledDate());
-                newDelivery.setTruck(truckRepository.findById(truckId).get());
-                newDelivery.setRemainingSpace(truckRepository.findById(truckId).get().getCapacity());
+                newDelivery.setTruck(truckRepository.findById(deliveryRequest.getTruckId()).get());
+                newDelivery.setRemainingSpace(truckRepository.findById(deliveryRequest.getTruckId()).get().getCapacity());
 
                 return CustomDeliveryMapper.managerMapDeliveryToDeliveryDTO(
                         deliveryRepository.save(newDelivery));
