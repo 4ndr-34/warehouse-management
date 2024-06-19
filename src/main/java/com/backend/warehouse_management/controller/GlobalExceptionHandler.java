@@ -1,8 +1,6 @@
 package com.backend.warehouse_management.controller;
 
-import com.backend.warehouse_management.exception.AlreadyExistsException;
-import com.backend.warehouse_management.exception.NotFoundException;
-import com.backend.warehouse_management.exception.OrderCannotBeProcessedException;
+import com.backend.warehouse_management.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +24,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("This item already exists");
     }
 
+    @ExceptionHandler(DeliveryDateException.class)
+    public ResponseEntity<?> handleDeliveryDateException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot process a delivery for this date!");
+    }
 
+    @ExceptionHandler(NoRemainingSpaceException.class)
+    public ResponseEntity<?> handleNoRemainingSpaceException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("There is no more space for this order");
+    }
 
+    @ExceptionHandler(ProductQuantityException.class)
+    public ResponseEntity<?> handleProductQuantityException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The requested quantity is bigger than the remaining for this product");
+    }
 
 }

@@ -9,9 +9,7 @@ import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.entity.*;
 import com.backend.warehouse_management.enums.OrderStatus;
-import com.backend.warehouse_management.exception.AlreadyExistsException;
-import com.backend.warehouse_management.exception.NotFoundException;
-import com.backend.warehouse_management.exception.OrderCannotBeProcessedException;
+import com.backend.warehouse_management.exception.*;
 import com.backend.warehouse_management.mapper.CustomDeliveryMapper;
 import com.backend.warehouse_management.mapper.CustomOrderMapper;
 import com.backend.warehouse_management.repository.*;
@@ -190,18 +188,18 @@ public class OrderUtils {
     }
 
 
-    public OrderDTO managerGetDetailedOrder(Long orderId) throws Exception {
+    public OrderDTO managerGetDetailedOrder(Long orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             return CustomOrderMapper.managerMapOrderToOrderDTODetailed(optionalOrder.get());
         }
         else {
-            throw new Exception("Order with ID: " + orderId + ", does not exist");
+            throw new NotFoundException();
         }
     }
 
 
-    public OrderDTO managerApproveOrder(Long orderId) throws Exception {
+    public OrderDTO managerApproveOrder(Long orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             optionalOrder.get().setOrderStatus(OrderStatus.APPROVED);
@@ -210,12 +208,12 @@ public class OrderUtils {
                     orderRepository.save(optionalOrder.get()));
         }
         else {
-            throw new Exception("Order with ID: " + orderId + ", does not exist");
+            throw new NotFoundException();
         }
     }
 
 
-    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) throws Exception {
+    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         if (optionalOrder.isPresent() && (optionalOrder.get().getOrderStatus().equals(OrderStatus.AWAITING_APPROVAL))) {
@@ -227,22 +225,21 @@ public class OrderUtils {
         }
 
         else {
-            throw new Exception("Order with ID: " + orderId + ", does not exist");
+            throw new NotFoundException();
         }
     }
 
 
     public List<DeliveryDTO> managerCheckAvailableDeliveryDates() {
         LocalDate upperLimit = LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue());
-        List<Delivery> availableDeliveries = deliveryRepository.findAllByScheduledDateBetween(LocalDate.now(),
-                LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue()));
+        List<Delivery> availableDeliveries = deliveryRepository.findAllByScheduledDateBetween(LocalDate.now(), upperLimit);
         return availableDeliveries.stream()
                 .map(CustomDeliveryMapper::managerMapDeliveryToDeliveryDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) throws Exception {
+    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) {
         LocalDate upperLimit = LocalDate.now().plusDays(configRepository.findByConfigName("deliveryDays").get().getConfigValue());
 
         if (DataUtils.isWithinDateRange(deliveryRequest.getScheduledDate(), LocalDate.now(), upperLimit)
@@ -260,17 +257,17 @@ public class OrderUtils {
             }
 
             else {
-                throw new Exception("There already is a delivery for this truck");
+                throw new AlreadyExistsException();
             }
         }
         else {
-            throw new Exception("The delivery date is not within the allowed date range or it is not a weekday");
+            throw new DeliveryDateException();
         }
     }
 
 
 
-    public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) throws Exception {
+    public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         Optional<Delivery> optionalDelivery = deliveryRepository.findById(deliveryId);
 
@@ -290,7 +287,7 @@ public class OrderUtils {
                             optionalDelivery.get().getRemainingSpace() - orderRequiredSpace);
                 }
                 else {
-                    throw new Exception("You have surpassed the available space in the truck!");
+                    throw new NoRemainingSpaceException();
                 }
                 Order updatedOrder = orderRepository.save(optionalOrder.get());
                 updateProductQuantitiesAfterOrderConfirmation(updatedOrder);
@@ -299,11 +296,11 @@ public class OrderUtils {
                         deliveryRepository.save(optionalDelivery.get()));
             }
             else {
-                throw new Exception("You cannot add this order to delivery");
+                throw new OrderCannotBeProcessedException();
             }
         }
         else {
-            throw new Exception("An order or delivery with this ID doesn't exist");
+            throw new NotFoundException();
         }
     }
 
@@ -317,7 +314,7 @@ public class OrderUtils {
         return orderTotalSpace;
     }
 
-    private void updateProductQuantitiesAfterOrderConfirmation(Order order) throws Exception {
+    private void updateProductQuantitiesAfterOrderConfirmation(Order order) {
         for(OrderItem orderItem : order.getOrderItems()) {
             Optional<Product> product = productRepository.findById(orderItem.getProduct().getId());
 
@@ -329,7 +326,7 @@ public class OrderUtils {
                 productRepository.save(product.get());
             }
             else {
-                throw new Exception("You don't have enough of this product to deliver!");
+                throw new ProductQuantityException();
             }
         }
     }

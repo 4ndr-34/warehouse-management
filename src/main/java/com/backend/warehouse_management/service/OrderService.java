@@ -19,12 +19,12 @@ public interface OrderService {
     OrderDTO clientSubmitOrder(Long orderId);
     OrderDTO clientCancelOrder(Long orderId);
     List<OrderDTO> managerGetAllOrders();
-    OrderDTO managerGetDetailedOrder(Long orderId) throws Exception;
-    OrderDTO managerApproveOrder(Long orderId) throws Exception;
-    OrderDTO managerDeclineOrder(Long orderId, String declineReason) throws Exception;
+    OrderDTO managerGetDetailedOrder(Long orderId);
+    OrderDTO managerApproveOrder(Long orderId);
+    OrderDTO managerDeclineOrder(Long orderId, String declineReason);
     List<DeliveryDTO> managerCheckAvailableDeliveryDates();
-    DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) throws Exception;
-    DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) throws Exception;
+    DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId);
+    DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId);
     List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId);
 
 }

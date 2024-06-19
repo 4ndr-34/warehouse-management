@@ -62,17 +62,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO managerGetDetailedOrder(Long orderId) throws Exception {
+    public OrderDTO managerGetDetailedOrder(Long orderId) {
         return orderUtils.managerGetDetailedOrder(orderId);
     }
 
     @Override
-    public OrderDTO managerApproveOrder(Long orderId) throws Exception {
+    public OrderDTO managerApproveOrder(Long orderId) {
         return orderUtils.managerApproveOrder(orderId);
     }
 
     @Override
-    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) throws Exception {
+    public OrderDTO managerDeclineOrder(Long orderId, String declineReason) {
         return orderUtils.managerDeclineOrder(orderId, declineReason);
     }
 
@@ -82,12 +82,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) throws Exception {
+    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest, Long truckId) {
         return orderUtils.managerCreateDeliveryWithTruck(deliveryRequest, truckId);
     }
 
     @Override
-    public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) throws Exception {
+    public DeliveryDTO managerAddOrderToDelivery(Long orderId, Long deliveryId) {
         return orderUtils.managerAddOrderToDelivery(orderId, deliveryId);
     }
 
