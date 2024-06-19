@@ -1,6 +1,7 @@
 package com.backend.warehouse_management.controller;
 
 import com.backend.warehouse_management.dto.admin.ConfigDTO;
+import com.backend.warehouse_management.dto.admin.EditConfigRequest;
 import com.backend.warehouse_management.dto.admin.UserCRUDRequest;
 import com.backend.warehouse_management.dto.admin.UserCRUDResponse;
 import com.backend.warehouse_management.service.AdminConfigService;
@@ -17,35 +18,35 @@ public class AdminController {
 
     private final UserService userService;
     private final AdminConfigService adminConfigService;
-    @PostMapping("/create")
+    @PostMapping("/user/create")
     public ResponseEntity<UserCRUDResponse> createUser(@RequestBody UserCRUDRequest userCRUDRequest) throws Exception {
         return new ResponseEntity<>(userService.adminCreateUser(userCRUDRequest), HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<UserCRUDResponse> updateUser(@RequestBody UserCRUDRequest userCRUDRequest, @PathVariable("id") Long id) {
-        return new ResponseEntity<>(userService.adminUpdateUser(userCRUDRequest,id ), HttpStatus.OK);
+    @PutMapping("/user/edit")
+    public ResponseEntity<UserCRUDResponse> updateUser(@RequestBody UserCRUDRequest userCRUDRequest, @RequestParam Long userId) {
+        return new ResponseEntity<>(userService.adminUpdateUser(userCRUDRequest, userId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<UserCRUDResponse> getUserById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(userService.adminGetUserById(id), HttpStatus.OK);
+    @GetMapping("/user/get")
+    public ResponseEntity<UserCRUDResponse> getUserById(@RequestParam Long userId) {
+        return new ResponseEntity<>(userService.adminGetUserById(userId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable("id") Long id) {
-        userService.adminDeleteUser(id);
+    @DeleteMapping("/user/delete")
+    public ResponseEntity<String> deleteUserById(@RequestParam Long userId) {
+        userService.adminDeleteUser(userId);
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
     @PostMapping("/config/add")
-    public ResponseEntity<ConfigDTO> addNewConfig(@RequestBody ConfigDTO configDTO) throws Exception {
+    public ResponseEntity<ConfigDTO> addNewConfig(@RequestBody ConfigDTO configDTO) {
         return new ResponseEntity<>(adminConfigService.adminAddConfig(configDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/config/{configId}/update")
-    public ResponseEntity<ConfigDTO> editConfigValue(@PathVariable("configId") Long configId, @RequestParam("newValue") Integer newValue) throws Exception {
-        return new ResponseEntity<>(adminConfigService.adminChangeConfigValue(configId, newValue), HttpStatus.OK);
+    @PutMapping("/config/edit")
+    public ResponseEntity<ConfigDTO> editConfigValue(@RequestBody EditConfigRequest request) {
+        return new ResponseEntity<>(adminConfigService.adminChangeConfigValue(request), HttpStatus.OK);
     }
 
 }

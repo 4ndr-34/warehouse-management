@@ -1,7 +1,9 @@
 package com.backend.warehouse_management.service.impl;
 
 import com.backend.warehouse_management.dto.admin.ConfigDTO;
+import com.backend.warehouse_management.dto.admin.EditConfigRequest;
 import com.backend.warehouse_management.entity.AdminConfig;
+import com.backend.warehouse_management.exception.NotFoundException;
 import com.backend.warehouse_management.mapper.AdminConfigMapper;
 import com.backend.warehouse_management.repository.ConfigRepository;
 import com.backend.warehouse_management.service.AdminConfigService;
@@ -34,20 +36,20 @@ public class AdminConfigServiceImpl implements AdminConfigService {
     }
 
     @Override
-    public ConfigDTO adminChangeConfigValue(Long configId, Integer newValue) throws RuntimeException {
+    public ConfigDTO adminChangeConfigValue(EditConfigRequest request) {
         //retrieve config
-        Optional<AdminConfig> optionalConfig = configRepository.findById(configId);
+        Optional<AdminConfig> optionalConfig = configRepository.findById(request.getConfigId());
         //if config exists
         if(optionalConfig.isPresent()) {
             //edit the config value
-            optionalConfig.get().setConfigValue(newValue);
+            optionalConfig.get().setConfigValue(request.getNewValue());
             //save the new value
             return adminConfigMapper.configToConfigDTO(
                     configRepository.save(optionalConfig.get()));
         }
         //if config doesn't exist, throw exception
         else {
-            throw new RuntimeException("Config with this ID: " + configId + " doesn't exist");
+            throw new NotFoundException();
         }
     }
 }
