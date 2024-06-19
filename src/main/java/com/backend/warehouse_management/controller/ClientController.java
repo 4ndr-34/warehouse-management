@@ -26,13 +26,11 @@ public class ClientController {
         return new ResponseEntity<>(orderService.clientCreateOrder(userId), HttpStatus.CREATED);
     }
 
-
-    //client/2/allorders
     @GetMapping("/{id}/allorders")
     public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable("id") Long userId) {
         return new ResponseEntity<>(orderService.getAllOrdersForClientId(userId), HttpStatus.OK);
     }
-    //client/2/orders
+
     @GetMapping("/{userId}/orders")
     public ResponseEntity<List<OrderDTO>> getAllOrdersByStatus(@PathVariable("userId") Long userId, @RequestParam("status") OrderStatus orderStatus) {
         return new ResponseEntity<>(orderService.getOrdersByStatusAndClientId(userId, orderStatus), HttpStatus.OK);
@@ -43,13 +41,11 @@ public class ClientController {
         return new ResponseEntity<>(orderService.clientAddItemToOrder(userId, itemRequest), HttpStatus.OK);
     }
 
-
     @PostMapping("/updateitem")
     public ResponseEntity<OrderDTO> updateItemQuantity(@RequestBody UpdateOrderItemRequest request) throws Exception {
         return new ResponseEntity<>(orderService.clientUpdateItemQuantity(request), HttpStatus.OK);
     }
 
-    //client/order/3/item/delete/4
     @DeleteMapping("/removeitem")
     public ResponseEntity<OrderDTO> removeItemFromOrder(@RequestBody RemoveOrderItemRequest request) throws Exception {
         return new ResponseEntity<>(orderService.clientRemoveItemFromOrder(request), HttpStatus.OK);
