@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateDeliveryRequest {
 
+    private Long truckId;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate scheduledDate;
 }

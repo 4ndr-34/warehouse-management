@@ -1,12 +1,15 @@
 package com.backend.warehouse_management.service.impl;
 
-import com.backend.warehouse_management.dto.client.OrderDTO;
-import com.backend.warehouse_management.dto.client.OrderItemDTO;
+import com.backend.warehouse_management.dto.client.*;
+import com.backend.warehouse_management.dto.manager.AddOrderToDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
+import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.entity.Order;
-import com.backend.warehouse_management.enums.OrderStatus;
 import com.backend.warehouse_management.mapper.CustomOrderMapper;
 import com.backend.warehouse_management.repository.OrderRepository;
 import com.backend.warehouse_management.service.OrderService;
+import com.backend.warehouse_management.utils.OrderUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +22,79 @@ public class OrderServiceImpl implements OrderService {
 
 
     private final OrderRepository orderRepository;
+    private final OrderUtils orderUtils;
+
     @Override
-    public OrderDTO createNewOrder(Long id, OrderDTO orderDTO) {
-        return null;
+    public OrderDTO clientCreateOrder(Long userId) {
+        return orderUtils.clientCreateOrder(userId);
+    }
+
+
+    @Override
+    public OrderDTO clientAddItemToOrder(AddItemToOrderRequest itemRequest) {
+        return orderUtils.clientAddItemToOrder(itemRequest);
+    }
+
+
+    @Override
+    public OrderDTO clientUpdateItemQuantity(UpdateOrderItemRequest request) {
+        return orderUtils.clientUpdateItemQuantity(request);
+    }
+
+
+    @Override
+    public OrderDTO clientRemoveItemFromOrder(RemoveOrderItemRequest request) {
+        return orderUtils.clientRemoveItemFromOrder(request);
     }
 
     @Override
-    public OrderDTO addItemToOrder(Long userId, OrderItemDTO orderItemDTO) {
-        return null;
+    public OrderDTO clientSubmitOrder(Long orderId) {
+        return orderUtils.clientSubmitOrder(orderId);
+    }
+
+    @Override
+    public OrderDTO clientCancelOrder(Long orderId) {
+        return orderUtils.clientCancelOrder(orderId);
+    }
+
+    @Override
+    public List<OrderDTO> managerGetAllOrders() {
+        return orderUtils.managerGetAllOrders();
+    }
+
+    @Override
+    public OrderDTO managerGetDetailedOrder(Long orderId) {
+        return orderUtils.managerGetDetailedOrder(orderId);
+    }
+
+    @Override
+    public OrderDTO managerApproveOrder(Long orderId) {
+        return orderUtils.managerApproveOrder(orderId);
+    }
+
+    @Override
+    public OrderDTO managerDeclineOrder(DeclineOrderRequest request) {
+        return orderUtils.managerDeclineOrder(request);
+    }
+
+    @Override
+    public List<DeliveryDTO> managerCheckAvailableDeliveryDates() {
+        return orderUtils.managerCheckAvailableDeliveryDates();
+    }
+
+    @Override
+    public DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest) {
+        return orderUtils.managerCreateDeliveryWithTruck(deliveryRequest);
+    }
+
+    @Override
+    public DeliveryDTO managerAddOrderToDelivery(AddOrderToDeliveryRequest request) {
+        return orderUtils.managerAddOrderToDelivery(request.getOrderId(), request.getDeliveryId());
+    }
+
+    @Override
+    public List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
+        return orderUtils.managerRemoveOrderFromDelivery(orderId, deliveryId);
     }
 
     @Override
@@ -40,8 +108,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByStatusAndClientId(Long userId, OrderStatus orderStatus) {
-        List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(userId, orderStatus);
+    public List<OrderDTO> getOrdersByStatusAndClientId(GetOrdersByStatusRequest request) {
+        List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(request.getUserId(), request.getStatus());
         List<OrderDTO> orderListForReturn = new ArrayList<>();
         for(Order order : ordersOfStatus) {
             orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));
