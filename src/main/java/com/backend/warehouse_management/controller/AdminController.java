@@ -3,7 +3,7 @@ package com.backend.warehouse_management.controller;
 import com.backend.warehouse_management.dto.admin.ConfigDTO;
 import com.backend.warehouse_management.dto.admin.UserCRUDRequest;
 import com.backend.warehouse_management.dto.admin.UserCRUDResponse;
-import com.backend.warehouse_management.service.AdminService;
+import com.backend.warehouse_management.service.AdminConfigService;
 import com.backend.warehouse_management.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final UserService userService;
-    private final AdminService adminService;
+    private final AdminConfigService adminConfigService;
     @PostMapping("/create")
     public ResponseEntity<UserCRUDResponse> createUser(@RequestBody UserCRUDRequest userCRUDRequest) throws Exception {
         return new ResponseEntity<>(userService.adminCreateUser(userCRUDRequest), HttpStatus.CREATED);
@@ -40,12 +40,12 @@ public class AdminController {
 
     @PostMapping("/config/add")
     public ResponseEntity<ConfigDTO> addNewConfig(@RequestBody ConfigDTO configDTO) throws Exception {
-        return new ResponseEntity<>(adminService.adminAddConfig(configDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(adminConfigService.adminAddConfig(configDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/config/{configId}/update")
     public ResponseEntity<ConfigDTO> editConfigValue(@PathVariable("configId") Long configId, @RequestParam("newValue") Integer newValue) throws Exception {
-        return new ResponseEntity<>(adminService.adminChangeConfigValue(configId, newValue), HttpStatus.OK);
+        return new ResponseEntity<>(adminConfigService.adminChangeConfigValue(configId, newValue), HttpStatus.OK);
     }
 
 }

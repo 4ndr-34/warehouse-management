@@ -4,7 +4,7 @@ import com.backend.warehouse_management.dto.admin.ConfigDTO;
 import com.backend.warehouse_management.entity.AdminConfig;
 import com.backend.warehouse_management.mapper.AdminConfigMapper;
 import com.backend.warehouse_management.repository.ConfigRepository;
-import com.backend.warehouse_management.service.AdminService;
+import com.backend.warehouse_management.service.AdminConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService {
+public class AdminConfigServiceImpl implements AdminConfigService {
 
     private final ConfigRepository configRepository;
     private final AdminConfigMapper adminConfigMapper;
