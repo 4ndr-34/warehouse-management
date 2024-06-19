@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProducts() {
-        return productMapper.getAllProducts(productRepository.findAll());
+        return productMapper.productListToProductDTOList(productRepository.findAll());
     }
 
     @Override
