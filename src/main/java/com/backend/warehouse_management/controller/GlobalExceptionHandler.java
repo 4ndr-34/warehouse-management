@@ -39,4 +39,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The requested quantity is bigger than the remaining for this product");
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You're not allowed to access this resource");
+    }
+
+
 }
