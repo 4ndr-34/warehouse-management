@@ -15,6 +15,7 @@ import java.util.Date;
 
 public class JwtHelper {
 
+    private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
 
     public static String generateToken(String username) {
         var now = Instant.now();
@@ -22,7 +23,7 @@ public class JwtHelper {
                 .subject(username)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(60, ChronoUnit.MINUTES)))
-                .signWith(getSecretKey())
+                .signWith(SECRET_KEY)
                 .compact();
     }
 
@@ -30,8 +31,6 @@ public class JwtHelper {
         final String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
-
-    private static SecretKey getSecretKey(){return Jwts.SIG.HS256.key().build();}
 
     public static String extractUsername(String token) {
         return getTokenBody(token).getSubject();
@@ -45,7 +44,7 @@ public class JwtHelper {
     private static Claims getTokenBody(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(getSecretKey())
+                    .verifyWith(SECRET_KEY)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
