@@ -25,14 +25,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO createProduct(ProductDTO productDTO) {
         if(productRepository.findByItemName(productDTO.getItemName()).isEmpty()){
             log.info("saving new product...");
-            productRepository.save(
-                    productMapper.productDTOToProduct(productDTO));
+            return productMapper.productToProductDTO(productRepository.save(
+                    productMapper.productDTOToProduct(productDTO)));
         } else {
             throw new AlreadyExistsException();
         }
-
-        return productMapper.productToProductDTO(
-                productRepository.findByItemName(productDTO.getItemName()).get());
     }
 
     @Override
