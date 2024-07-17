@@ -1,5 +1,6 @@
 package com.backend.warehouse_management.security;
 
+import com.backend.warehouse_management.enums.UserRole;
 import com.backend.warehouse_management.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -46,7 +46,22 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(POST, "/auth/register").permitAll()
-                        .requestMatchers(GET, "/auth/login").permitAll()
+                        .requestMatchers(POST, "/auth/login").permitAll()
+                        //client endpoints
+                        .requestMatchers(POST, "/client/**").hasAnyRole(UserRole.CLIENT.name())
+                        .requestMatchers(GET, "/client/**").hasAnyRole(UserRole.CLIENT.name())
+                        .requestMatchers(PUT, "/client/**").hasAnyRole(UserRole.CLIENT.name())
+                        .requestMatchers(DELETE, "/client/**").hasAnyRole(UserRole.CLIENT.name())
+                        //admin endpoints
+                        .requestMatchers(POST, "/admin/**").hasAnyRole(UserRole.SYSTEM_ADMIN.name())
+                        .requestMatchers(PUT, "/admin/**").hasAnyRole(UserRole.SYSTEM_ADMIN.name())
+                        .requestMatchers(GET, "/admin/**").hasAnyRole(UserRole.SYSTEM_ADMIN.name())
+                        .requestMatchers(DELETE, "/admin/**").hasAnyRole(UserRole.SYSTEM_ADMIN.name())
+                        //manager endpoints
+                        .requestMatchers(POST, "/manager/**").hasAnyRole(UserRole.WAREHOUSE_MANAGER.name())
+                        .requestMatchers(GET, "/manager/**").hasAnyRole(UserRole.WAREHOUSE_MANAGER.name())
+                        .requestMatchers(PUT, "/manager/**").hasAnyRole(UserRole.WAREHOUSE_MANAGER.name())
+                        .requestMatchers(DELETE, "/manager/**").hasAnyRole(UserRole.WAREHOUSE_MANAGER.name())
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
