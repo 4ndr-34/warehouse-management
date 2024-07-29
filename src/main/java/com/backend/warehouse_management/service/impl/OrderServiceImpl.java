@@ -1,7 +1,7 @@
 package com.backend.warehouse_management.service.impl;
 
 import com.backend.warehouse_management.dto.client.*;
-import com.backend.warehouse_management.dto.manager.AddOrderToDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.OrderAndDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
@@ -88,13 +88,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public DeliveryDTO managerAddOrderToDelivery(AddOrderToDeliveryRequest request) {
+    public DeliveryDTO managerAddOrderToDelivery(OrderAndDeliveryRequest request) {
         return orderUtils.managerAddOrderToDelivery(request.getOrderId(), request.getDeliveryId());
     }
 
     @Override
     public List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
         return orderUtils.managerRemoveOrderFromDelivery(orderId, deliveryId);
+    }
+
+    @Override
+    public DeliveryDTO completeDelivery() {
+        return orderUtils.completeDelivery();
     }
 
     @Override

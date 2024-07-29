@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
@@ -15,4 +16,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     boolean existsByScheduledDateAndTruckId(LocalDate scheduledDate, Long truckId);
 
     List<Delivery> findAllByScheduledDateBetween(LocalDate today, LocalDate upperLimit);
+
+    Optional<Delivery> findDeliveryByScheduledDate(LocalDate scheduledDate);
 }

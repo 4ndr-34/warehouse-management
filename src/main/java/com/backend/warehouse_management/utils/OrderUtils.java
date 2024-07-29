@@ -340,5 +340,17 @@ public class OrderUtils {
         return null;
     }
 
+    public DeliveryDTO completeDelivery(){
+        Optional<Delivery> optionalDelivery = deliveryRepository.findDeliveryByScheduledDate(LocalDate.now());
+        if(optionalDelivery.isPresent()){
+            List<Order> deliveryOrders = orderRepository.findAllByDeliveryId(optionalDelivery.get().getId());
+            for(Order order : deliveryOrders){
+                order.setOrderStatus(OrderStatus.FULFILLED);
+                orderRepository.save(order);
+            }
+        }
+        return CustomDeliveryMapper.managerMapDeliveryToDeliveryDTO(deliveryRepository.save(optionalDelivery.get()));
+    }
+
 
 }
