@@ -25,7 +25,7 @@ public interface OrderService {
     List<DeliveryDTO> managerCheckAvailableDeliveryDates();
     DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest);
     DeliveryDTO managerAddOrderToDelivery(OrderAndDeliveryRequest request);
-    List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId);
+    List<DeliveryDTO> managerRemoveOrderFromDelivery(OrderAndDeliveryRequest request);
 
     DeliveryDTO completeDelivery();
 }

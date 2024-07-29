@@ -93,8 +93,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
-        return orderUtils.managerRemoveOrderFromDelivery(orderId, deliveryId);
+    public List<DeliveryDTO> managerRemoveOrderFromDelivery(OrderAndDeliveryRequest request) {
+        return orderUtils.managerRemoveOrderFromDelivery(request);
     }
 
     @Override
