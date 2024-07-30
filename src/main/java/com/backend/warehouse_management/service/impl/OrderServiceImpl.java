@@ -93,11 +93,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<DeliveryDTO> managerRemoveOrderFromDelivery(OrderAndDeliveryRequest request) {
-        return orderUtils.managerRemoveOrderFromDelivery(request);
-    }
-
-    @Override
     public DeliveryDTO completeDelivery() {
         return orderUtils.completeDelivery();
     }

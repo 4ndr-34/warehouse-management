@@ -333,13 +333,6 @@ public class OrderUtils {
     }
 
 
-    //TODO
-    public List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId) {
-
-
-        return null;
-    }
-
     public DeliveryDTO completeDelivery(){
         Optional<Delivery> optionalDelivery = deliveryRepository.findDeliveryByScheduledDate(LocalDate.now());
         if(optionalDelivery.isPresent()){
