@@ -37,9 +37,6 @@ public class OrderUtils {
     private final DeliveryRepository deliveryRepository;
     private final TruckRepository truckRepository;
     private final ConfigRepository configRepository;
-    private final CreateState createState;
-    private final AwaitingApprovalState awaitingApprovalState;
-    private final CancelState cancelState;
 
 
     public OrderDTO clientCreateOrder(Long userId) {
@@ -47,7 +44,13 @@ public class OrderUtils {
             throw new OrderCannotBeProcessedException();
         } else {
             Order order = new Order();
-            return createState.createOrder(userId, order);
+            log.info("Created order!");
+            order.setOrderNumber(UUID.randomUUID());
+            order.setTotalPrice(0.0);
+            order.setSubmittedDate(LocalDate.now());
+            order.setUser(userRepository.findById(userId).get());
+            order.setOrderStatus(OrderStatus.CREATED);
+            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(order));
         }
     }
 
@@ -160,7 +163,8 @@ public class OrderUtils {
         Optional<Order> optionalOrder = orderRepository.findByIdAndUserId(orderId, orderRepository.findById(orderId).get().getUser().getId());
 
         if (optionalOrder.isPresent() && DataUtils.isOrderEditable(optionalOrder.get())) {
-            return awaitingApprovalState.processOrder(optionalOrder.get());
+            optionalOrder.get().setOrderStatus(OrderStatus.AWAITING_APPROVAL);
+            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(optionalOrder.get()));
         }
         else {
             throw new OrderCannotBeProcessedException();
@@ -171,7 +175,8 @@ public class OrderUtils {
         Optional<Order> optionalOrder = orderRepository.findByIdAndUserId(orderId, orderRepository.findById(orderId).get().getUser().getId());
 
         if (optionalOrder.isPresent() && DataUtils.isOrderCancellable(optionalOrder.get())) {
-            return cancelState.processOrder(optionalOrder.get());
+            optionalOrder.get().setOrderStatus(OrderStatus.CANCELLED);
+            return CustomOrderMapper.basicMapOrderToOrderDTO(orderRepository.save(optionalOrder.get()));
         }
         else {
             throw new OrderCannotBeProcessedException();
