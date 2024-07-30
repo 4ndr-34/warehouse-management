@@ -87,8 +87,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public DeliveryDTO completeDelivery() {
-        return orderUtils.completeDelivery();
+    public List<DeliveryDTO> completeDeliveries() {
+        return orderUtils.completeDeliveries();
     }
 
     @Override

@@ -25,5 +25,5 @@ public interface OrderService {
     List<DeliveryDTO> managerCheckAvailableDeliveryDates();
     DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest);
     DeliveryDTO managerAddOrderToDelivery(OrderAndDeliveryRequest request);
-    DeliveryDTO completeDelivery();
+    List<DeliveryDTO> completeDeliveries();
 }

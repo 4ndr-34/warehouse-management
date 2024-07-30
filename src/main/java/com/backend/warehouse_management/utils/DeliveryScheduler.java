@@ -15,7 +15,7 @@ public class DeliveryScheduler {
 
     @Scheduled(cron = "0 45 19 * * 1-5")
     public void deliveryScheuling() {
-        orderService.completeDelivery();
+        orderService.completeDeliveries();
     }
 
 }
