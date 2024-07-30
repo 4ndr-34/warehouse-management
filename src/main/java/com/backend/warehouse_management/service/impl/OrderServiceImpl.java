@@ -5,7 +5,6 @@ import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
 import com.backend.warehouse_management.dto.manager.OrderAndDeliveryRequest;
-import com.backend.warehouse_management.repository.OrderRepository;
 import com.backend.warehouse_management.service.OrderService;
 import com.backend.warehouse_management.utils.OrderUtils;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-
-    private final OrderRepository orderRepository;
     private final OrderUtils orderUtils;
 
     @Override
