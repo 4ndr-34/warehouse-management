@@ -1,10 +1,7 @@
 package com.backend.warehouse_management.utils;
 
 
-import com.backend.warehouse_management.dto.client.AddItemToOrderRequest;
-import com.backend.warehouse_management.dto.client.OrderDTO;
-import com.backend.warehouse_management.dto.client.RemoveOrderItemRequest;
-import com.backend.warehouse_management.dto.client.UpdateOrderItemRequest;
+import com.backend.warehouse_management.dto.client.*;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
@@ -23,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -343,6 +341,26 @@ public class OrderUtils {
             }
         }
         return CustomDeliveryMapper.managerMapDeliveryToDeliveryDTO(deliveryRepository.save(optionalDelivery.get()));
+    }
+
+
+    public List<OrderDTO> getAllOrdersForClientId(Long userId) {
+        List<Order> ordersForUser = orderRepository.findAllByUserId(userId);
+        List<OrderDTO> orderListForReturn = new ArrayList<>();
+        for(Order order : ordersForUser) {
+            orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));
+        }
+        return orderListForReturn;
+    }
+
+
+    public List<OrderDTO> getOrdersByStatusAndClientId(GetOrdersByStatusRequest request) {
+        List<Order> ordersOfStatus = orderRepository.findAllByUserIdAndOrderStatus(request.getUserId(), request.getStatus());
+        List<OrderDTO> orderListForReturn = new ArrayList<>();
+        for(Order order : ordersOfStatus) {
+            orderListForReturn.add(CustomOrderMapper.basicMapOrderToOrderDTO(order));
+        }
+        return orderListForReturn;
     }
 
 
