@@ -15,4 +15,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     boolean existsByScheduledDateAndTruckId(LocalDate scheduledDate, Long truckId);
 
     List<Delivery> findAllByScheduledDateBetween(LocalDate today, LocalDate upperLimit);
+
+    List<Delivery> findAllByScheduledDate(LocalDate scheduledDate);
 }

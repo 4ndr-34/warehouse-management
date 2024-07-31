@@ -47,8 +47,13 @@ public class ManagerController {
     }
 
     @PostMapping("/delivery/addorder")
-    public ResponseEntity<DeliveryDTO> addOrderToDelivery(@RequestBody AddOrderToDeliveryRequest request) {
+    public ResponseEntity<DeliveryDTO> addOrderToDelivery(@RequestBody OrderAndDeliveryRequest request) {
         return new ResponseEntity<>(orderService.managerAddOrderToDelivery(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/delivery/available")
+    public ResponseEntity<List<DeliveryDTO>> getAvailableDeliveries() {
+        return new ResponseEntity<>(orderService.managerCheckAvailableDeliveryDates(), HttpStatus.OK);
     }
 
 

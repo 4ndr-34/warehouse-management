@@ -1,7 +1,7 @@
 package com.backend.warehouse_management.service;
 
 import com.backend.warehouse_management.dto.client.*;
-import com.backend.warehouse_management.dto.manager.AddOrderToDeliveryRequest;
+import com.backend.warehouse_management.dto.manager.OrderAndDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.CreateDeliveryRequest;
 import com.backend.warehouse_management.dto.manager.DeclineOrderRequest;
 import com.backend.warehouse_management.dto.manager.DeliveryDTO;
@@ -24,7 +24,6 @@ public interface OrderService {
     OrderDTO managerDeclineOrder(DeclineOrderRequest request);
     List<DeliveryDTO> managerCheckAvailableDeliveryDates();
     DeliveryDTO managerCreateDeliveryWithTruck(CreateDeliveryRequest deliveryRequest);
-    DeliveryDTO managerAddOrderToDelivery(AddOrderToDeliveryRequest request);
-    List<DeliveryDTO> managerRemoveOrderFromDelivery(Long orderId, Long deliveryId);
-
+    DeliveryDTO managerAddOrderToDelivery(OrderAndDeliveryRequest request);
+    List<DeliveryDTO> completeDeliveries();
 }

@@ -23,7 +23,7 @@ public class Delivery {
     private Long id;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate scheduledDate;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "delivery")
+    @OneToMany(mappedBy = "delivery")
     private List<Order> orders;
     @ManyToOne
     @JoinColumn(name = "truck_id", referencedColumnName = "id")
